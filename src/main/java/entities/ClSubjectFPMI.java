@@ -14,7 +14,6 @@ import java.io.Serializable;
 
 })
 public class ClSubjectFPMI implements Serializable {
-
     public static final String GET_ALL_SUBJECT_FPMI = "ClSubjectFMPI.getAll";
     static final String GET_ALL_SUBJECT_FPMI_QUERY = "SELECT c FROM ClSubjectFPMI c";
 
