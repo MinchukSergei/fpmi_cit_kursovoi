@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 /**
  * Created by USER on 01.04.2016.
  */
@@ -62,6 +61,7 @@ public class InitializeFrame extends JFrame {
         this.setTitle("Subject identifying");
         setUpDefault();
         initComponents();
+        setJListsRenderer();
         setUpPane();
         setUpButtonListeners(this);
         setDropModeOnLists();
@@ -84,6 +84,25 @@ public class InitializeFrame extends JFrame {
         this.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setVisible(true);
+    }
+
+    private void setJListsRenderer() {
+        jListCIT.setCellRenderer(getRenderer());
+        jListFPMI.setCellRenderer(getRenderer());
+        jListOTHER.setCellRenderer(getRenderer());
+    }
+
+    private ListCellRenderer<? super String> getRenderer() {
+        return new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list,
+                                                          Object value, int index, boolean isSelected,
+                                                          boolean cellHasFocus) {
+                JLabel listCellRendererComponent = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                listCellRendererComponent.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
+                return listCellRendererComponent;
+            }
+        };
     }
 
     private void setBordersToLists() {
