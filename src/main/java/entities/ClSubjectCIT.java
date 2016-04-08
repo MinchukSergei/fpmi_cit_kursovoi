@@ -22,7 +22,7 @@ import java.io.Serializable;
                 query = ClSubjectCIT.GET_ALL_SUBJECT_CIT_QUERY_PROC,
                 resultClass = ClSubjectCIT.class)
 })
-public class ClSubjectCIT implements Serializable {
+public class ClSubjectCIT implements Serializable, UniversityObject {
 
     public ClSubjectCIT() {
         this.setIdSubject((short) -1);
@@ -84,5 +84,15 @@ public class ClSubjectCIT implements Serializable {
 
     public String toStr() {
         return subjectName + String.valueOf(idSubject);
+    }
+
+    @Override
+    public String getName() {
+        return getSubjectName();
+    }
+
+    @Override
+    public short getId() {
+        return getIdSubject();
     }
 }

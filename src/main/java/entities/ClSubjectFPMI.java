@@ -13,7 +13,7 @@ import java.io.Serializable;
         @NamedQuery(name = ClSubjectFPMI.GET_ALL_SUBJECT_FPMI, query = ClSubjectFPMI.GET_ALL_SUBJECT_FPMI_QUERY)
 
 })
-public class ClSubjectFPMI implements Serializable {
+public class ClSubjectFPMI implements Serializable, UniversityObject {
     public static final String GET_ALL_SUBJECT_FPMI = "ClSubjectFMPI.getAll";
     static final String GET_ALL_SUBJECT_FPMI_QUERY = "SELECT c FROM ClSubjectFPMI c";
 
@@ -66,5 +66,15 @@ public class ClSubjectFPMI implements Serializable {
 
     public String toStr() {
         return subjectName + String.valueOf(idSubject);
+    }
+
+    @Override
+    public String getName() {
+        return getSubjectName();
+    }
+
+    @Override
+    public short getId() {
+        return getIdSubject();
     }
 }

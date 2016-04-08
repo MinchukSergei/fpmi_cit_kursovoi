@@ -1,6 +1,6 @@
 package drag_and_drop;
 
-import entities.ClSubjectCIT;
+import entities.UniversityObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,13 +10,13 @@ import java.io.StringReader;
 /**
  * Created by USER on 02.04.2016.
  */
-public class ToTransferHandler extends TransferHandler {
-    int action;
+public class FromToTransferHandler<CIT> extends TransferHandler {
+    private int action;
     private int index = 0;
     boolean self = false;
 
     private JList dragFrom;
-    private DefaultListModel<ClSubjectCIT> from;
+    private DefaultListModel<CIT> from;
 
     public JList getDragFrom() {
         return dragFrom;
@@ -31,17 +31,17 @@ public class ToTransferHandler extends TransferHandler {
     }
 
 
-
     @Override
+    @SuppressWarnings("unchecked")
     protected Transferable createTransferable(JComponent c) {
         self = true;
-        from = (DefaultListModel<ClSubjectCIT>) dragFrom.getModel();
+        from = (DefaultListModel<CIT>) dragFrom.getModel();
         index = dragFrom.getSelectedIndex();
         if (index < 0 || index >= from.getSize()) {
             return null;
         }
 
-        return new ClSubjectCITTransferable((ClSubjectCIT) dragFrom.getSelectedValue());
+        return new ClSubjectCITTransferable(dragFrom.getSelectedValue());
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ToTransferHandler extends TransferHandler {
         }
     }
 
-    public ToTransferHandler(int action) {
+    public FromToTransferHandler(int action) {
         this.action = action;
     }
 
@@ -85,6 +85,7 @@ public class ToTransferHandler extends TransferHandler {
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     public boolean importData(TransferHandler.TransferSupport support) {
         // if we cannot handle the import, say so
         if (!canImport(support)) {
@@ -97,9 +98,9 @@ public class ToTransferHandler extends TransferHandler {
         int index = dl.getIndex();
 
         // fetch the data and bail if this fails
-        ClSubjectCIT data;
+        CIT data;
         try {
-            data = (ClSubjectCIT) support.getTransferable().getTransferData(DataFlavor.imageFlavor);
+            data = (CIT) support.getTransferable().getTransferData(DataFlavor.imageFlavor);
         } catch (UnsupportedFlavorException e) {
             return false;
         } catch (java.io.IOException e) {
@@ -109,8 +110,8 @@ public class ToTransferHandler extends TransferHandler {
         JList list = (JList) support.getComponent();
         DefaultListModel model = (DefaultListModel) list.getModel();
         if (self) {
-            ClSubjectCIT a = (ClSubjectCIT) model.get(this.index);
-            ClSubjectCIT b = (ClSubjectCIT) model.get(index);
+            CIT a = (CIT) model.get(this.index);
+            CIT b = (CIT) model.get(index);
             a = returnFirst(b, b = a);
             model.setElementAt(a, this.index);
             model.setElementAt(b, index);
@@ -119,22 +120,7 @@ public class ToTransferHandler extends TransferHandler {
             model.removeElementAt(index + 1);
         } else {
             model.insertElementAt(data, index);
-            boolean last = false;
-            for (int i = index; i < model.getSize(); i++) {
-                if (((ClSubjectCIT)model.get(i)).getSubjectName().equals(" ")) {
-                    model.removeElementAt(i);
-                    last = true;
-                    break;
-                }
-            }
-            if (!last) {
-                for (int i = index; i >= 0; i--) {
-                    if (((ClSubjectCIT)model.get(i)).getSubjectName().equals(" ")) {
-                        model.removeElementAt(i);
-                        break;
-                    }
-                }
-            }
+            insertToNearest(model, index);
         }
 
         Rectangle rect = list.getCellBounds(index, index);
@@ -143,11 +129,34 @@ public class ToTransferHandler extends TransferHandler {
         list.requestFocusInWindow();
 
 
-
         return true;
     }
 
-    private ClSubjectCIT returnFirst(ClSubjectCIT o1, ClSubjectCIT o2) {
+    private void insertToNearest(DefaultListModel model, int index) {
+        if (!findDown(model, index))
+            findUp(model, index);
+    }
+
+    private boolean findDown(DefaultListModel model, int index) {
+        for (int i = index; i < model.getSize(); i++) {
+            if (((UniversityObject) model.get(i)).getName().equals(" ")) {
+                model.removeElementAt(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void findUp(DefaultListModel model, int index) {
+        for (int i = index; i >= 0; i--) {
+            if (((UniversityObject) model.get(i)).getName().equals(" ")) {
+                model.removeElementAt(i);
+                break;
+            }
+        }
+    }
+
+    private CIT returnFirst(CIT o1, CIT o2) {
         return o1;
     }
 }

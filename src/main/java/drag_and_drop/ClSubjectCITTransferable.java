@@ -11,15 +11,16 @@ import java.io.StringReader;
 /**
  * Created by USER on 02.04.2016.
  */
-public class ClSubjectCITTransferable implements Transferable {
-    private ClSubjectCIT data;
+public class ClSubjectCITTransferable<CIT> implements Transferable {
+    private CIT data;
 
-    public ClSubjectCITTransferable(ClSubjectCIT data) {
+    public ClSubjectCITTransferable(CIT data) {
         this.data = data;
     }
 
     private static final DataFlavor[] flavors = {
             DataFlavor.stringFlavor,
+            DataFlavor.imageFlavor
     };
 
     @Override

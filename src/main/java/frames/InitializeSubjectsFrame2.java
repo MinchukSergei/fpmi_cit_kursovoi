@@ -1,13 +1,12 @@
 package frames;
 
+import drag_and_drop.FromToTransferHandler;
 import drag_and_drop.FromTransferHandler;
-import drag_and_drop.ToTransferHandler;
 import entities.ClSubjectCIT;
 import entities.ClSubjectFPMI;
 import entities.ExportClSubject;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
-import service.ServiceExportClSubject;
 import service.impl.ServiceClSubjectCITImpl;
 import service.impl.ServiceClSubjectFPMIImpl;
 import service.impl.ServiceExportClSubjectImpl;
@@ -21,7 +20,7 @@ import java.util.List;
 /**
  * Created by USER on 01.04.2016.
  */
-public class InitializeFrame extends JFrame {
+public class InitializeSubjectsFrame2 extends JFrame {
     private int FRAME_WIDTH = 700;
     private int FRAME_HEIGHT = 500;
 
@@ -56,15 +55,38 @@ public class InitializeFrame extends JFrame {
         this.sessionFactoryCIT = sessionFactoryCIT;
     }
 
-    public InitializeFrame() {
+    public InitializeSubjectsFrame2() {
         super();
         this.setTitle("Subject identifying");
-        setUpDefault();
+
         initComponents();
+        setUpDefault();
         setJListsRenderer();
-        setUpPane();
+
+        setUpPane(getCurrWidth(), getCurrHeight());
         setUpButtonListeners(this);
         setDropModeOnLists();
+        this.pack();
+    }
+
+    private int getCurrHeight() {
+        int minScrollHeight = 200;
+        if (this.getContentPane().getSize().getHeight() < minScrollHeight)
+            return minScrollHeight;
+        return (int) (this.getContentPane().getSize().getHeight() - minScrollHeight / 2);
+    }
+
+    private int getCurrWidth() {
+        int minScrollWidth = 100;
+        if (Math.round(this.getContentPane().getSize().getWidth() / 3) - 15 < minScrollWidth)
+            return minScrollWidth;
+        return (int) (Math.round(this.getContentPane().getSize().getWidth() / 3.) - 15);
+    }
+
+    @Override
+    public void validate() {
+        super.validate();
+        setUpPane(getCurrWidth(), getCurrHeight());
     }
 
     private void initComponents() {
@@ -120,7 +142,7 @@ public class InitializeFrame extends JFrame {
         jListOTHER.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 
-        ToTransferHandler toTransferHandler = new ToTransferHandler(TransferHandler.MOVE);
+        FromToTransferHandler toTransferHandler = new FromToTransferHandler(TransferHandler.MOVE);
         toTransferHandler.setDragFrom(jListCIT);
 
         jListCIT.setTransferHandler(toTransferHandler);
@@ -153,7 +175,7 @@ public class InitializeFrame extends JFrame {
         jLabelObjectName.setText(name);
     }
 
-    public void setUpButtonListeners(InitializeFrame frame) {
+    public void setUpButtonListeners(InitializeSubjectsFrame2 frame) {
         jButtonFillLists.addActionListener(e -> {
             loadDataToFPMIList();
             loadDataToCITList();
@@ -260,20 +282,22 @@ public class InitializeFrame extends JFrame {
     }
 
 
-    private void setUpPane() {
+    private void setUpPane(int scrollPaneWidth, int scrollPaneHeight) {
+
         setBordersToLists();
 
         jButtonFillLists.setText("Fill lists");
         jButtonSync.setText("Synchronize");
         jButtonAccordance.setText("Put in accordance");
 
+
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                 .addGap(0, 0, Short.MAX_VALUE)
                                                 .addComponent(jButtonFillLists)
                                                 .addGap(18, 18, 18)
@@ -282,36 +306,35 @@ public class InitializeFrame extends JFrame {
                                                 .addComponent(jButtonSync))
                                         .addGroup(layout.createSequentialGroup()
                                                 .addContainerGap()
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                         .addGroup(layout.createSequentialGroup()
-                                                                .addComponent(jScrollPaneFPMI, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addComponent(jScrollPaneCIT, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jScrollPaneOTHER, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                .addComponent(jScrollPaneFPMI, GroupLayout.PREFERRED_SIZE, scrollPaneWidth, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addComponent(jScrollPaneCIT, GroupLayout.PREFERRED_SIZE, scrollPaneWidth, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(jScrollPaneOTHER, GroupLayout.PREFERRED_SIZE, scrollPaneWidth, GroupLayout.PREFERRED_SIZE))
                                                         .addComponent(jLabelObjectName))
                                                 .addGap(0, 0, Short.MAX_VALUE)))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(jLabelObjectName)
                                 .addGap(15, 15, 15)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(jScrollPaneFPMI, javax.swing.GroupLayout.DEFAULT_SIZE, 338, Short.MAX_VALUE)
-                                                .addComponent(jScrollPaneCIT))
-                                        .addComponent(jScrollPaneOTHER, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(jScrollPaneFPMI, GroupLayout.DEFAULT_SIZE, scrollPaneHeight, Short.MAX_VALUE)
+                                                .addComponent(jScrollPaneCIT, GroupLayout.DEFAULT_SIZE, scrollPaneHeight, Short.MAX_VALUE))
+                                        .addComponent(jScrollPaneOTHER, GroupLayout.PREFERRED_SIZE, scrollPaneHeight, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(jButtonSync)
                                         .addComponent(jButtonFillLists)
                                         .addComponent(jButtonAccordance))
                                 .addContainerGap())
         );
 
-        this.pack();
     }
 }

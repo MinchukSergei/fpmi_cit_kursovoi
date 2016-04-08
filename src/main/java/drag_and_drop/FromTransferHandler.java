@@ -5,9 +5,9 @@ import entities.ClSubjectCIT;
 import javax.swing.*;
 import java.awt.datatransfer.Transferable;
 
-public class FromTransferHandler extends TransferHandler {
+public class FromTransferHandler<CIT> extends TransferHandler {
     private JList dragFrom;
-    private DefaultListModel<ClSubjectCIT> from;
+    private DefaultListModel<CIT> from;
 
     public JList getDragFrom() {
         return dragFrom;
@@ -31,14 +31,15 @@ public class FromTransferHandler extends TransferHandler {
 
     private int index = 0;
 
+    @SuppressWarnings("unchecked")
     public Transferable createTransferable(JComponent comp) {
-        from = (DefaultListModel<ClSubjectCIT>) dragFrom.getModel();
+        from = (DefaultListModel<CIT>) dragFrom.getModel();
         index = dragFrom.getSelectedIndex();
         if (index < 0 || index >= from.getSize()) {
             return null;
         }
 
-        return new ClSubjectCITTransferable((ClSubjectCIT) dragFrom.getSelectedValue());
+        return new ClSubjectCITTransferable(dragFrom.getSelectedValue());
     }
 
     public void exportDone(JComponent comp, Transferable trans, int action) {

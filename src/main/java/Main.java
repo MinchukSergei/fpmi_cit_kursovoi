@@ -1,8 +1,5 @@
-import dao.impl.DAOClSubjectCITImpl;
 import database.SQLServerConnector;
-import frames.InitializeFrame;
-
-import java.util.List;
+import frames.InitializeSubjectsFrame;
 
 
 public class Main {
@@ -18,8 +15,7 @@ public class Main {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                InitializeFrame frame = new InitializeFrame();
-                frame.setLabelTitle("Subjects");
+                InitializeSubjectsFrame frame = new InitializeSubjectsFrame("Subjects");
                 frame.setSessionFactoryFPMI(sqlServerConnectorFMPI.getSessionFactory());
                 frame.setSessionFactoryCIT(sqlServerConnectorCIT.getSessionFactory());
             }
