@@ -1,7 +1,10 @@
 package dao.impl;
 
-import dao.DAOClSubjectCIT;
-import entities.ClSubjectCIT;
+import dao.DAOUniversityObjectCIT;
+import entities.UniversityObject;
+import entities.UniversityObjectProcedure;
+import entities.lessons.ClLessonCIT;
+import entities.subjects.ClSubjectCIT;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -12,7 +15,7 @@ import java.util.List;
 /**
  * Created by USER on 01.04.2016.
  */
-public class DAOClSubjectCITImpl implements DAOClSubjectCIT {
+public class DAOUniversityObjectCITImpl<CIT> implements DAOUniversityObjectCIT<CIT> {
     private SessionFactory sessionFactory;
 
     public SessionFactory getSessionFactory() {
@@ -23,13 +26,13 @@ public class DAOClSubjectCITImpl implements DAOClSubjectCIT {
         this.sessionFactory = sessionFactory;
     }
 
-    public List<ClSubjectCIT> getAll() {
+    public List<CIT> getAll() {
         Session session = null;
-        List<ClSubjectCIT> list = null;
+        List<CIT> list = null;
 
         try {
             session = sessionFactory.openSession();
-            Query query = session.getNamedQuery(ClSubjectCIT.GET_ALL_SUBJECT_CIT);
+            Query query = session.getNamedQuery(ClLessonCIT.GET_ALL_LESSON_CIT);
             list = query.list();
         } catch (HibernateException e) {
             e.printStackTrace();
@@ -40,9 +43,9 @@ public class DAOClSubjectCITImpl implements DAOClSubjectCIT {
         return list;
     }
 
-    public List<ClSubjectCIT> callSubjectExports() {
+    public List<CIT> callSubjectExports() {
         Session session = null;
-        List<ClSubjectCIT> list = null;
+        List<CIT> list = null;
         try {
             session = sessionFactory.openSession();
             Query query = session.getNamedQuery(ClSubjectCIT.GET_ALL_SUBJECT_CIT_PROC);

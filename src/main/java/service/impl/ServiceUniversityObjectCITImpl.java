@@ -1,25 +1,22 @@
 package service.impl;
 
-import dao.DAOClSubjectCIT;
-import dao.impl.DAOClSubjectCITImpl;
-import entities.ClSubjectCIT;
+import dao.impl.DAOUniversityObjectCITImpl;
+import entities.subjects.ClSubjectCIT;
 import org.hibernate.SessionFactory;
-import org.hibernate.mapping.Collection;
-import service.ServiceClSubjectCIT;
+import service.ServiceUniversityObjectCIT;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
  * Created by USER on 02.04.2016.
  */
-public class ServiceClSubjectCITImpl implements ServiceClSubjectCIT {
-    private DAOClSubjectCITImpl daoClSubjectCIT;
+public class ServiceUniversityObjectCITImpl implements ServiceUniversityObjectCIT {
+    private DAOUniversityObjectCITImpl daoClSubjectCIT;
 
-    public ServiceClSubjectCITImpl() {
-        this.daoClSubjectCIT = new DAOClSubjectCITImpl();
+    public ServiceUniversityObjectCITImpl() {
+        this.daoClSubjectCIT = new DAOUniversityObjectCITImpl();
     }
 
     public void setSessionFactory(SessionFactory sessionFactory) {

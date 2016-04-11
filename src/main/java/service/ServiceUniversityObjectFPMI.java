@@ -1,14 +1,13 @@
 package service;
 
-import entities.ClSubjectCIT;
-import entities.ClSubjectFPMI;
+import entities.subjects.ClSubjectFPMI;
 
 import java.util.List;
 
 /**
  * Created by USER on 02.04.2016.
  */
-public interface ServiceClSubjectFPMI {
+public interface ServiceUniversityObjectFPMI {
 
     List<ClSubjectFPMI> getAll();
 }

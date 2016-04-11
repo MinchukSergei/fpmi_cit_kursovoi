@@ -1,7 +1,10 @@
-package entities;
+package entities.subjects;
 
 
 
+
+import entities.UniversityObject;
+import entities.UniversityObjectProcedure;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -22,7 +25,7 @@ import java.io.Serializable;
                 query = ClSubjectCIT.GET_ALL_SUBJECT_CIT_QUERY_PROC,
                 resultClass = ClSubjectCIT.class)
 })
-public class ClSubjectCIT implements Serializable, UniversityObject {
+public class ClSubjectCIT implements Serializable, UniversityObject, UniversityObjectProcedure {
 
     public ClSubjectCIT() {
         this.setIdSubject((short) -1);
@@ -94,5 +97,10 @@ public class ClSubjectCIT implements Serializable, UniversityObject {
     @Override
     public short getId() {
         return getIdSubject();
+    }
+
+    @Override
+    public String getProcedureName() {
+        return GET_ALL_SUBJECT_CIT_PROC;
     }
 }

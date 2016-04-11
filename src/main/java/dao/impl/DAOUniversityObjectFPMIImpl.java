@@ -1,8 +1,7 @@
 package dao.impl;
 
-import dao.DAOClSubjectFPMI;
-import entities.ClSubjectCIT;
-import entities.ClSubjectFPMI;
+import dao.DAOUniversityObjectFPMI;
+import entities.subjects.ClSubjectFPMI;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -13,7 +12,7 @@ import java.util.List;
 /**
  * Created by USER on 01.04.2016.
  */
-public class DAOClSubjectFPMIImpl implements DAOClSubjectFPMI {
+public class DAOUniversityObjectFPMIImpl implements DAOUniversityObjectFPMI {
     private SessionFactory sessionFactory;
 
     public SessionFactory getSessionFactory() {

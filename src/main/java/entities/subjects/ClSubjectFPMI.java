@@ -1,4 +1,6 @@
-package entities;
+package entities.subjects;
+
+import entities.UniversityObject;
 
 import javax.persistence.*;
 import java.io.Serializable;

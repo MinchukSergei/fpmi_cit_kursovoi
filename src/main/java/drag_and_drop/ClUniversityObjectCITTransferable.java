@@ -1,20 +1,17 @@
 package drag_and_drop;
 
-import entities.ClSubjectCIT;
-
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
-import java.io.StringReader;
 
 /**
  * Created by USER on 02.04.2016.
  */
-public class ClSubjectCITTransferable<CIT> implements Transferable {
+public class ClUniversityObjectCITTransferable<CIT> implements Transferable {
     private CIT data;
 
-    public ClSubjectCITTransferable(CIT data) {
+    public ClUniversityObjectCITTransferable(CIT data) {
         this.data = data;
     }
 

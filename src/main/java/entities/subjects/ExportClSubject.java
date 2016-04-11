@@ -1,9 +1,8 @@
-package entities;
+package entities.subjects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import entities.UniversityObject;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
@@ -11,7 +10,12 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "export_cl_subject")
-public class ExportClSubject implements Serializable {
+@NamedQueries({
+        @NamedQuery(name = ExportClSubject.GET_ALL_ID, query = ExportClSubject.GET_ALL_ID_QUERY)
+})
+public class ExportClSubject implements Serializable, UniversityObject {
+    public static final String GET_ALL_ID = "ExportClSubject.getAll";
+    static final String GET_ALL_ID_QUERY = "SELECT e FROM ExportClSubject e";
 
     @Id
     @Column(name = "id_subject")
@@ -60,5 +64,15 @@ public class ExportClSubject implements Serializable {
                 "idSubject=" + idSubject +
                 ", idSubjectCit=" + idSubjectCit +
                 '}';
+    }
+
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public short getId() {
+        return getIdSubject();
     }
 }

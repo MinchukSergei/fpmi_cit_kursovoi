@@ -1,12 +1,9 @@
 package service.impl;
 
-import dao.impl.DAOClSubjectCITImpl;
-import dao.impl.DAOClSubjectFPMIImpl;
-import entities.ClSubjectCIT;
-import entities.ClSubjectFPMI;
+import dao.impl.DAOUniversityObjectFPMIImpl;
+import entities.subjects.ClSubjectFPMI;
 import org.hibernate.SessionFactory;
-import org.hibernate.mapping.Collection;
-import service.ServiceClSubjectFPMI;
+import service.ServiceUniversityObjectFPMI;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,12 +12,12 @@ import java.util.List;
 /**
  * Created by USER on 02.04.2016.
  */
-public class ServiceClSubjectFPMIImpl implements ServiceClSubjectFPMI {
+public class ServiceUniversityObjectFPMIImpl implements ServiceUniversityObjectFPMI {
 
-    private DAOClSubjectFPMIImpl daoClSubjectFPMI;
+    private DAOUniversityObjectFPMIImpl daoClSubjectFPMI;
 
-    public ServiceClSubjectFPMIImpl() {
-        this.daoClSubjectFPMI = new DAOClSubjectFPMIImpl();
+    public ServiceUniversityObjectFPMIImpl() {
+        this.daoClSubjectFPMI = new DAOUniversityObjectFPMIImpl();
     }
 
     public void setSessionFactory(SessionFactory sessionFactory) {

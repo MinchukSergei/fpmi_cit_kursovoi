@@ -2,14 +2,14 @@ package frames;
 
 import drag_and_drop.FromToTransferHandler;
 import drag_and_drop.FromTransferHandler;
-import entities.ClSubjectCIT;
-import entities.ClSubjectFPMI;
-import entities.ExportClSubject;
+import entities.subjects.ClSubjectCIT;
+import entities.subjects.ClSubjectFPMI;
+import entities.subjects.ExportClSubject;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
-import service.impl.ServiceClSubjectCITImpl;
-import service.impl.ServiceClSubjectFPMIImpl;
-import service.impl.ServiceExportClSubjectImpl;
+import service.impl.ServiceUniversityObjectCITImpl;
+import service.impl.ServiceUniversityObjectFPMIImpl;
+import service.impl.ServiceExportUniversityObjectImpl;
 
 import javax.swing.*;
 import java.awt.*;
@@ -153,7 +153,7 @@ public class InitializeSubjectsFrame2 extends JFrame {
     }
 
     private void loadDataToFPMIList() {
-        ServiceClSubjectFPMIImpl serviceClSubjectFPMI = new ServiceClSubjectFPMIImpl();
+        ServiceUniversityObjectFPMIImpl serviceClSubjectFPMI = new ServiceUniversityObjectFPMIImpl();
         serviceClSubjectFPMI.setSessionFactory(sessionFactoryFPMI);
         List<ClSubjectFPMI> subjNames = serviceClSubjectFPMI.getOrderedSubject();
         setDataToList(subjNames, jListFPMI, jScrollPaneFPMI);
@@ -164,7 +164,7 @@ public class InitializeSubjectsFrame2 extends JFrame {
     }
 
     private void loadDataToOtherList() {
-        ServiceClSubjectCITImpl serviceClSubjectCIT = new ServiceClSubjectCITImpl();
+        ServiceUniversityObjectCITImpl serviceClSubjectCIT = new ServiceUniversityObjectCITImpl();
         serviceClSubjectCIT.setSessionFactory(sessionFactoryCIT);
         List<ClSubjectCIT> subjNames = serviceClSubjectCIT.getOrderedSubject();
 
@@ -217,7 +217,7 @@ public class InitializeSubjectsFrame2 extends JFrame {
                 exportClSubjects.get(i).setIdSubjectCit(citModel.get(i).getIdSubject());
             }
 
-            ServiceExportClSubjectImpl serviceExportClSubject = new ServiceExportClSubjectImpl();
+            ServiceExportUniversityObjectImpl serviceExportClSubject = new ServiceExportUniversityObjectImpl();
             serviceExportClSubject.setSessionFactory(sessionFactoryFPMI);
 
             try {

@@ -1,7 +1,5 @@
 package drag_and_drop;
 
-import entities.ClSubjectCIT;
-
 import javax.swing.*;
 import java.awt.datatransfer.Transferable;
 
@@ -39,7 +37,7 @@ public class FromTransferHandler<CIT> extends TransferHandler {
             return null;
         }
 
-        return new ClSubjectCITTransferable(dragFrom.getSelectedValue());
+        return new ClUniversityObjectCITTransferable(dragFrom.getSelectedValue());
     }
 
     public void exportDone(JComponent comp, Transferable trans, int action) {

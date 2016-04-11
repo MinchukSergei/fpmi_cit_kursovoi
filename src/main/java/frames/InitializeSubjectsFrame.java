@@ -1,17 +1,15 @@
 package frames;
 
-import drag_and_drop.FromTransferHandler;
-import drag_and_drop.FromToTransferHandler;
 import entities.*;
-import frames.frame_objects.JScrollPaneListDB;
+import entities.subjects.ClSubjectCIT;
+import entities.subjects.ClSubjectFPMI;
+import entities.subjects.ExportClSubject;
 import org.hibernate.HibernateException;
-import org.hibernate.SessionFactory;
-import service.impl.ServiceClSubjectCITImpl;
-import service.impl.ServiceClSubjectFPMIImpl;
-import service.impl.ServiceExportClSubjectImpl;
+import service.impl.ServiceUniversityObjectCITImpl;
+import service.impl.ServiceUniversityObjectFPMIImpl;
+import service.impl.ServiceExportUniversityObjectImpl;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,34 +20,102 @@ import java.util.List;
 public class InitializeSubjectsFrame extends InitFrame {
     public InitializeSubjectsFrame(String title) {
         super(title);
+
         setUpButtonListeners(this);
         this.pack();
     }
 
     private void loadDataToFPMIList() {
-        ServiceClSubjectFPMIImpl serviceClSubjectFPMI = new ServiceClSubjectFPMIImpl();
+        ServiceUniversityObjectFPMIImpl serviceClSubjectFPMI = new ServiceUniversityObjectFPMIImpl();
         serviceClSubjectFPMI.setSessionFactory(sessionFactoryFPMI);
         List<ClSubjectFPMI> subjNames = serviceClSubjectFPMI.getOrderedSubject();
         setDataToList(subjNames, scrollPaneFPMI);
     }
 
     private void loadDataToOtherList() {
-        ServiceClSubjectCITImpl serviceClSubjectCIT = new ServiceClSubjectCITImpl();
+        ServiceUniversityObjectCITImpl serviceClSubjectCIT = new ServiceUniversityObjectCITImpl();
         serviceClSubjectCIT.setSessionFactory(sessionFactoryCIT);
         List<ClSubjectCIT> subjNames = serviceClSubjectCIT.getOrderedSubject();
         setDataToList(subjNames, scrollPaneOther);
     }
 
+    private void preloadingData() {
+        ServiceExportUniversityObjectImpl serviceExportClSubject = new ServiceExportUniversityObjectImpl();
+        serviceExportClSubject.setSessionFactory(sessionFactoryFPMI);
+
+        ServiceUniversityObjectFPMIImpl serviceClSubjectFPMI = new ServiceUniversityObjectFPMIImpl();
+        serviceClSubjectFPMI.setSessionFactory(sessionFactoryFPMI);
+
+        ServiceUniversityObjectCITImpl serviceClSubjectCIT = new ServiceUniversityObjectCITImpl();
+        serviceClSubjectCIT.setSessionFactory(sessionFactoryCIT);
+
+
+
+        List<ClSubjectCIT> citSubject = serviceClSubjectCIT.callSubjectExport();
+
+        List<ExportClSubject> exportList = serviceExportClSubject.getAll();
+
+        List<ClSubjectFPMI> finalFpmiSubject = serviceClSubjectFPMI.getAll();
+        List<ClSubjectCIT> finalCitSubject = new ArrayList<>();
+
+        boolean exist;
+        for (int i = 0; i < finalFpmiSubject.size(); i++) {
+            exist = false;
+            for (int j = 0; j < exportList.size(); j++) {
+                if (finalFpmiSubject.get(i).getId() == exportList.get(j).getId()) {
+                    exist = true;
+                    finalCitSubject.add(findById(citSubject, exportList.get(j).getIdSubjectCit()));
+                    removeById(citSubject, exportList.get(j).getIdSubjectCit());
+                }
+            }
+            if (!exist) {
+                finalCitSubject.add(new ClSubjectCIT());
+            }
+        }
+
+        setDataToList(finalFpmiSubject, scrollPaneFPMI);
+        setDataToList(finalCitSubject, scrollPaneCIT);
+        setDataToList(citSubject, scrollPaneOther);
+    }
+
+    private void removeById(List<ClSubjectCIT> list, short id) {
+        for (ClSubjectCIT subj : list) {
+            if (subj.getIdSubject() == id) {
+                list.remove(subj);
+                return;
+            }
+        }
+    }
+
+    private ClSubjectCIT findById(List<ClSubjectCIT> list, short id) {
+        for (ClSubjectCIT subj : list) {
+            if (subj.getId() == id) {
+                return subj;
+            }
+        }
+        return new ClSubjectCIT();
+    }
 
     public void setUpButtonListeners(InitializeSubjectsFrame frame) {
         jButtonFillLists.addActionListener(e -> {
-            loadDataToFPMIList();
-            loadDataToOtherList();
+            preloadingData();
+//            loadDataToFPMIList();
+//            loadDataToOtherList();
             frame.repaint();
         });
 
         jButtonAccordance.addActionListener(e -> {
-            putInAccordance(ClSubjectCIT.class);
+            int counter = 0;
+            if (scrollPaneCIT.getjList().getModel().getSize() != 0) {
+                DefaultListModel<ClSubjectCIT> model = (DefaultListModel<ClSubjectCIT>) scrollPaneCIT.getjList().getModel();
+                for (int i = 0; i < model.getSize(); i++) {
+                    if (model.get(i).getId() != -1)
+                        counter++;
+                }
+            }
+
+            if (counter == 0)
+                putInAccordance(ClSubjectCIT.class);
             frame.repaint();
         });
 
@@ -79,14 +145,14 @@ public class InitializeSubjectsFrame extends InitFrame {
         }
 
         for (int i = 0; i < citModel.getSize(); i++) {
-            if (((UniversityObject)citModel.get(i)).getId() == -1) {
-                JOptionPane.showMessageDialog(this, "Put in accordance all objects.");
-                return;
-            }
+//            if (((UniversityObject)citModel.get(i)).getId() == -1) {
+//                JOptionPane.showMessageDialog(this, "Put in accordance all objects.");
+//                return;
+//            }
             exportClSubjects.get(i).setIdSubjectCit(((UniversityObject)citModel.get(i)).getId());
         }
 
-        ServiceExportClSubjectImpl serviceExportClSubject = new ServiceExportClSubjectImpl();
+        ServiceExportUniversityObjectImpl serviceExportClSubject = new ServiceExportUniversityObjectImpl();
         serviceExportClSubject.setSessionFactory(sessionFactoryFPMI);
 
         try {

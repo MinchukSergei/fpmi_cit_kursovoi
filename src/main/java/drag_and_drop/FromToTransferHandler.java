@@ -5,7 +5,6 @@ import entities.UniversityObject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.*;
-import java.io.StringReader;
 
 /**
  * Created by USER on 02.04.2016.
@@ -41,7 +40,7 @@ public class FromToTransferHandler<CIT> extends TransferHandler {
             return null;
         }
 
-        return new ClSubjectCITTransferable(dragFrom.getSelectedValue());
+        return new ClUniversityObjectCITTransferable(dragFrom.getSelectedValue());
     }
 
     @Override
