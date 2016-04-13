@@ -1,5 +1,6 @@
 package entities.mark_kateg;
 
+import entities.ExportUniversityObject;
 import entities.UniversityObject;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import java.io.Serializable;
 @NamedQueries({
         @NamedQuery(name = ExportClMarkKateg.GET_ALL_ID, query = ExportClMarkKateg.GET_ALL_ID_QUERY)
 })
-public class ExportClMarkKateg implements Serializable, UniversityObject {
+public class ExportClMarkKateg implements Serializable, UniversityObject, ExportUniversityObject {
     public static final String GET_ALL_ID = "ExportClMarkKateg.getAll";
     static final String GET_ALL_ID_QUERY = "SELECT e FROM ExportClMarkKateg e";
 
@@ -65,5 +66,20 @@ public class ExportClMarkKateg implements Serializable, UniversityObject {
     @Override
     public short getId() {
         return getIdMarkKateg();
+    }
+
+    @Override
+    public void setId(short id) {
+        this.idMarkKateg = id;
+    }
+
+    @Override
+    public void setIdCit(short idCit) {
+        this.idMarkKategCit = idCit;
+    }
+
+    @Override
+    public short getIdCit() {
+        return idMarkKategCit;
     }
 }

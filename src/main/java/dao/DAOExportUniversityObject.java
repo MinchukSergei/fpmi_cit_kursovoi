@@ -12,7 +12,7 @@ import java.util.List;
 public interface DAOExportUniversityObject<EXPORT> {
 
     void updateAll(List<EXPORT> subjectsId) throws HibernateException;
-    List<EXPORT> getAll() throws HibernateException;
+    List<EXPORT> getAll(String queryName) throws HibernateException;
 
 
 }

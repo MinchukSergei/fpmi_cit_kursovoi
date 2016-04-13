@@ -9,6 +9,6 @@ import java.util.List;
  */
 public interface DAOUniversityObjectCIT<CIT> {
 
-    List<CIT> getAll();
-    List<CIT> callSubjectExports();
+    List<CIT> getAll(String queryName);
+    List<CIT> callProcedureExports(String queryName);
 }

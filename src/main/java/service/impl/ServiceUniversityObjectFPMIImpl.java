@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by USER on 02.04.2016.
  */
-public class ServiceUniversityObjectFPMIImpl implements ServiceUniversityObjectFPMI {
+public class ServiceUniversityObjectFPMIImpl<FPMI> implements ServiceUniversityObjectFPMI<FPMI> {
 
     private DAOUniversityObjectFPMIImpl daoClSubjectFPMI;
 
@@ -25,23 +25,24 @@ public class ServiceUniversityObjectFPMIImpl implements ServiceUniversityObjectF
     }
 
     @Override
-    public List<ClSubjectFPMI> getAll() {
-        return daoClSubjectFPMI.getAll();
+    @SuppressWarnings("unchecked")
+    public List<FPMI> getAll(String queryName) {
+        return daoClSubjectFPMI.getAll(queryName);
     }
 
-    public List<String> getOrderedSubjectNames() {
-        List<ClSubjectFPMI> subjectCITs = daoClSubjectFPMI.getAll();
-        List<String> names = new ArrayList<>();
-        for (ClSubjectFPMI subj : subjectCITs) {
-            names.add(subj.getSubjectName().trim());
-        }
-        Collections.sort(names, (String::compareTo));
-        return names;
-    }
+//    public List<String> getOrderedSubjectNames() {
+//        List<ClSubjectFPMI> subjectCITs = daoClSubjectFPMI.getAll();
+//        List<String> names = new ArrayList<>();
+//        for (ClSubjectFPMI subj : subjectCITs) {
+//            names.add(subj.getSubjectName().trim());
+//        }
+//        Collections.sort(names, (String::compareTo));
+//        return names;
+//    }
 
-    public List<ClSubjectFPMI> getOrderedSubject() {
-        List<ClSubjectFPMI> subjectFPMIs = daoClSubjectFPMI.getAll();
-        Collections.sort(subjectFPMIs, ((o1, o2) -> o1.getSubjectName().compareTo(o2.getSubjectName())));
-        return subjectFPMIs;
-    }
+//    public List<ClSubjectFPMI> getOrderedSubject() {
+//        List<ClSubjectFPMI> subjectFPMIs = daoClSubjectFPMI.getAll();
+//        Collections.sort(subjectFPMIs, ((o1, o2) -> o1.getSubjectName().compareTo(o2.getSubjectName())));
+//        return subjectFPMIs;
+//    }
 }

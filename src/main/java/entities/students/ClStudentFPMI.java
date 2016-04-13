@@ -102,7 +102,7 @@ public class ClStudentFPMI implements Serializable, UniversityObject {
 
     @Override
     public String toString() {
-        return String.format("%s %s %s %d", nZ, famRus, imRus, course);
+        return String.format("%s %s %s %d", nZ.trim(), famRus.trim(), imRus.trim(), course);
     }
 
     public String toStr() {

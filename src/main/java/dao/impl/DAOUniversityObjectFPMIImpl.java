@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by USER on 01.04.2016.
  */
-public class DAOUniversityObjectFPMIImpl implements DAOUniversityObjectFPMI {
+public class DAOUniversityObjectFPMIImpl<FPMI> implements DAOUniversityObjectFPMI<FPMI> {
     private SessionFactory sessionFactory;
 
     public SessionFactory getSessionFactory() {
@@ -23,13 +23,15 @@ public class DAOUniversityObjectFPMIImpl implements DAOUniversityObjectFPMI {
         this.sessionFactory = sessionFactory;
     }
 
-    public List<ClSubjectFPMI> getAll() {
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<FPMI> getAll(String queryName) {
         Session session = null;
-        List<ClSubjectFPMI> list = null;
+        List<FPMI> list = null;
 
         try {
             session = sessionFactory.openSession();
-            Query query = session.getNamedQuery(ClSubjectFPMI.GET_ALL_SUBJECT_FPMI);
+            Query query = session.getNamedQuery(queryName);
             list = query.list();
         } catch (HibernateException e) {
             e.printStackTrace();

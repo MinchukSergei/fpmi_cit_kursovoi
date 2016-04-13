@@ -1,5 +1,6 @@
 package entities.mark_type;
 
+import entities.ExportUniversityObject;
 import entities.UniversityObject;
 
 import javax.persistence.*;
@@ -12,7 +13,7 @@ import java.io.Serializable;
         @NamedQuery(name = ExportClMarkType.GET_ALL_ID,
                 query = ExportClMarkType.GET_ALL_ID_QUERY)
 })
-public class ExportClMarkType implements Serializable, UniversityObject {
+public class ExportClMarkType implements Serializable, UniversityObject, ExportUniversityObject {
     public static final String GET_ALL_ID = "ExportClMarkType.getAll";
     static final String GET_ALL_ID_QUERY = "SELECT e FROM ExportClMarkType e";
 
@@ -66,5 +67,20 @@ public class ExportClMarkType implements Serializable, UniversityObject {
     @Override
     public short getId() {
         return getIdMarkType();
+    }
+
+    @Override
+    public void setId(short id) {
+        this.idMarkType = id;
+    }
+
+    @Override
+    public void setIdCit(short idCit) {
+        this.idMarkTypeCit = idCit;
+    }
+
+    @Override
+    public short getIdCit() {
+        return idMarkTypeCit;
     }
 }

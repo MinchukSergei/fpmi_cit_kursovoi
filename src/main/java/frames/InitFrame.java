@@ -1,16 +1,19 @@
 package frames;
 
+import entities.ExportUniversityObject;
 import entities.UniversityObject;
 import frames.frame_objects.JScrollPaneListCIT;
 import frames.frame_objects.JScrollPaneListDB;
 import frames.frame_objects.JScrollPaneListFPMI;
 import frames.frame_objects.JScrollPaneListOther;
+import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
-import org.hibernate.service.internal.SessionFactoryServiceRegistryImpl;
+import service.impl.ServiceExportUniversityObjectImpl;
+import service.impl.ServiceUniversityObjectCITImpl;
+import service.impl.ServiceUniversityObjectFPMIImpl;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.List;
 import java.util.*;
 
 /**
@@ -33,6 +36,12 @@ public class InitFrame extends JFrame {
     protected SessionFactory sessionFactoryFPMI;
     protected SessionFactory sessionFactoryCIT;
 
+    protected ServiceExportUniversityObjectImpl serviceExportObject;
+    protected ServiceUniversityObjectCITImpl serviceObjectCIT;
+    protected ServiceUniversityObjectFPMIImpl serviceObjectFPMI = new ServiceUniversityObjectFPMIImpl();
+
+
+
 
     public InitFrame(String title) {
         super(title);
@@ -52,6 +61,10 @@ public class InitFrame extends JFrame {
         jButtonSync = new JButton("Synchronize");
         jButtonFillLists = new JButton("Fill lists");
         jButtonAccordance = new JButton("Put in accordance");
+
+        serviceExportObject = new ServiceExportUniversityObjectImpl();
+        serviceObjectCIT = new ServiceUniversityObjectCITImpl();
+        serviceObjectFPMI = new ServiceUniversityObjectFPMIImpl();
     }
 
     public SessionFactory getSessionFactoryFPMI() {
@@ -60,6 +73,8 @@ public class InitFrame extends JFrame {
 
     public void setSessionFactoryFPMI(SessionFactory sessionFactoryFPMI) {
         this.sessionFactoryFPMI = sessionFactoryFPMI;
+        serviceExportObject.setSessionFactory(sessionFactoryFPMI);
+        serviceObjectFPMI.setSessionFactory(sessionFactoryFPMI);
     }
 
     public SessionFactory getSessionFactoryCIT() {
@@ -68,6 +83,7 @@ public class InitFrame extends JFrame {
 
     public void setSessionFactoryCIT(SessionFactory sessionFactoryCIT) {
         this.sessionFactoryCIT = sessionFactoryCIT;
+        serviceObjectCIT.setSessionFactory(sessionFactoryCIT);
     }
 
 
@@ -109,6 +125,109 @@ public class InitFrame extends JFrame {
 
         paneListDB.getjList().setModel(model);
     }
+
+    protected <FPMI, CIT, EXPORT> void preloadingData(String fpmiQuery, String citQuery, String exportQuery,
+                                                      Class<CIT> clazz) {
+        java.util.List<CIT> citList = serviceObjectCIT.callProcedureExport(citQuery);
+        java.util.List<EXPORT> exportList = serviceExportObject.getAll(exportQuery);
+        java.util.List<FPMI> finalFpmiList = serviceObjectFPMI.getAll(fpmiQuery);
+
+        java.util.List<CIT> finalCitList = new ArrayList<>();
+
+        boolean exist;
+        for (int i = 0; i < finalFpmiList.size(); i++) {
+            exist = false;
+            for (int j = 0; j < exportList.size(); j++) {
+                if (((UniversityObject)finalFpmiList.get(i)).getId()
+                        == ((UniversityObject)exportList.get(j)).getId()) {
+                    exist = true;
+                    finalCitList.add(findById(citList, ((ExportUniversityObject)exportList.get(j)).getIdCit(), clazz));
+                    removeById(citList, ((ExportUniversityObject)exportList.get(j)).getIdCit());
+                }
+            }
+            if (!exist) {
+                try {
+                    finalCitList.add(clazz.newInstance());
+                } catch (InstantiationException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        setDataToList(finalFpmiList, scrollPaneFPMI);
+        setDataToList(finalCitList, scrollPaneCIT);
+        setDataToList(citList, scrollPaneOther);
+    }
+
+    private <CIT> void removeById(java.util.List<CIT> list, short id) {
+        for (CIT subj : list) {
+            if (((UniversityObject)subj).getId() == id) {
+                list.remove(subj);
+                return;
+            }
+        }
+    }
+
+    private <CIT> CIT findById(java.util.List<CIT> list, short id, Class<CIT> clazz) {
+        for (CIT subj : list) {
+            if (((UniversityObject)subj).getId() == id) {
+                return subj;
+            }
+        }
+
+        CIT elem = null;
+        try {
+            elem = clazz.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return elem;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected  <FPMI, CIT, EXPORT> void synchronize(Class<EXPORT> clazz) {
+        java.util.List<EXPORT> exportClSubjects = new ArrayList<>();
+
+        DefaultListModel<FPMI> fpmiModel;
+        DefaultListModel<CIT> citModel;
+        try {
+            fpmiModel = (DefaultListModel<FPMI>) scrollPaneFPMI.getjList().getModel();
+            citModel = (DefaultListModel<CIT>) scrollPaneCIT.getjList().getModel();
+        } catch (ClassCastException exp) {
+            JOptionPane.showMessageDialog(this, "Fill and accordance objects");
+            return;
+        }
+
+        for (int i = 0; i < fpmiModel.getSize(); i++) {
+            EXPORT elem = null;
+            try {
+                elem = clazz.newInstance();
+                ((ExportUniversityObject)elem).setId(((UniversityObject)fpmiModel.getElementAt(i)).getId());
+                exportClSubjects.add(elem);
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        for (int i = 0; i < citModel.getSize(); i++) {
+//            if (((UniversityObject)citModel.get(i)).getId() == -1) {
+//                JOptionPane.showMessageDialog(this, "Put in accordance all objects.");
+//                return;
+//            }
+            ((ExportUniversityObject)exportClSubjects.get(i)).setIdCit(((UniversityObject)citModel.get(i)).getId());
+        }
+
+        try {
+            serviceExportObject.updateAll(exportClSubjects);
+        } catch (HibernateException exp) {
+            JOptionPane.showMessageDialog(this, exp.getMessage());
+            return;
+        }
+        JOptionPane.showMessageDialog(this, "All object successfully identifying.");
+    }
+
+
 
     @SuppressWarnings("unchecked")
     public <FPMI, CIT> void putInAccordance(Class<CIT> clazz) {

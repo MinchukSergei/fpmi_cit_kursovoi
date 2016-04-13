@@ -7,7 +7,6 @@ import java.util.List;
 /**
  * Created by USER on 02.04.2016.
  */
-public interface ServiceUniversityObjectFPMI {
-
-    List<ClSubjectFPMI> getAll();
+public interface ServiceUniversityObjectFPMI<FPMI> {
+    List<FPMI> getAll(String queryName);
 }

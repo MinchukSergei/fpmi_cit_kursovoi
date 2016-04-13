@@ -113,7 +113,7 @@ public class ClStudentCIT implements Serializable, UniversityObject, UniversityO
 
     @Override
     public String toString() {
-        return String.format("%s %s %s %d", nZ, famRus, imRus, course);
+        return String.format("%s %s %s %d", nZ.trim(), famRus.trim(), imRus.trim(), course);
     }
 
     public String toStr() {

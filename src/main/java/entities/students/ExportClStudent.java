@@ -1,5 +1,6 @@
 package entities.students;
 
+import entities.ExportUniversityObject;
 import entities.UniversityObject;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import java.io.Serializable;
 @NamedQueries({
         @NamedQuery(name = ExportClStudent.GET_ALL_ID, query = ExportClStudent.GET_ALL_ID_QUERY)
 })
-public class ExportClStudent implements Serializable, UniversityObject {
+public class ExportClStudent implements Serializable, UniversityObject, ExportUniversityObject {
     public static final String GET_ALL_ID = "ExportClStudent.getAll";
     static final String GET_ALL_ID_QUERY = "SELECT e FROM ExportClStudent e";
 
@@ -65,5 +66,20 @@ public class ExportClStudent implements Serializable, UniversityObject {
     @Override
     public short getId() {
         return getIdStudent();
+    }
+
+    @Override
+    public void setId(short id) {
+        this.idStudent = id;
+    }
+
+    @Override
+    public void setIdCit(short idCit) {
+        this.idStudentCit = idCit;
+    }
+
+    @Override
+    public short getIdCit() {
+        return idStudentCit;
     }
 }

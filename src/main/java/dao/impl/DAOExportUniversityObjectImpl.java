@@ -44,13 +44,13 @@ public class DAOExportUniversityObjectImpl<EXPORT> implements DAOExportUniversit
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<EXPORT> getAll() throws HibernateException {
+    public List<EXPORT> getAll(String queryName) throws HibernateException {
         Session session = null;
         List<EXPORT> subjectsIdList = null;
         try {
             session = sessionFactory.openSession();
 
-            Query query = session.getNamedQuery(ExportClSubject.GET_ALL_ID);
+            Query query = session.getNamedQuery(queryName);
             subjectsIdList = query.list();
         } catch (HibernateException e) {
             throw new HibernateException(e);

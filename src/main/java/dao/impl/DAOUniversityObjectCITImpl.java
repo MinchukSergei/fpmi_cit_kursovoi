@@ -26,13 +26,14 @@ public class DAOUniversityObjectCITImpl<CIT> implements DAOUniversityObjectCIT<C
         this.sessionFactory = sessionFactory;
     }
 
-    public List<CIT> getAll() {
+    @Override
+    public List<CIT> getAll(String queryName) {
         Session session = null;
         List<CIT> list = null;
 
         try {
             session = sessionFactory.openSession();
-            Query query = session.getNamedQuery(ClLessonCIT.GET_ALL_LESSON_CIT);
+            Query query = session.getNamedQuery(queryName);
             list = query.list();
         } catch (HibernateException e) {
             e.printStackTrace();
@@ -43,12 +44,14 @@ public class DAOUniversityObjectCITImpl<CIT> implements DAOUniversityObjectCIT<C
         return list;
     }
 
-    public List<CIT> callSubjectExports() {
+
+    @Override
+    public List<CIT> callProcedureExports(String queryName) {
         Session session = null;
         List<CIT> list = null;
         try {
             session = sessionFactory.openSession();
-            Query query = session.getNamedQuery(ClSubjectCIT.GET_ALL_SUBJECT_CIT_PROC);
+            Query query = session.getNamedQuery(queryName);
             list = query.list();
         } catch (HibernateException e) {
             e.printStackTrace();

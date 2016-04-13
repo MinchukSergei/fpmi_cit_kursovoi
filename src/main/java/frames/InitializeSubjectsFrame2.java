@@ -152,24 +152,24 @@ public class InitializeSubjectsFrame2 extends JFrame {
 
     }
 
-    private void loadDataToFPMIList() {
-        ServiceUniversityObjectFPMIImpl serviceClSubjectFPMI = new ServiceUniversityObjectFPMIImpl();
-        serviceClSubjectFPMI.setSessionFactory(sessionFactoryFPMI);
-        List<ClSubjectFPMI> subjNames = serviceClSubjectFPMI.getOrderedSubject();
-        setDataToList(subjNames, jListFPMI, jScrollPaneFPMI);
-    }
+//    private void loadDataToFPMIList() {
+//        ServiceUniversityObjectFPMIImpl serviceObjectFPMI = new ServiceUniversityObjectFPMIImpl();
+//        serviceObjectFPMI.setSessionFactory(sessionFactoryFPMI);
+//        List<ClSubjectFPMI> subjNames = serviceObjectFPMI.getOrderedSubject();
+//        setDataToList(subjNames, jListFPMI, jScrollPaneFPMI);
+//    }
 
     private void loadDataToCITList() {
         jScrollPaneCIT.setViewportView(jListCIT);
     }
 
-    private void loadDataToOtherList() {
-        ServiceUniversityObjectCITImpl serviceClSubjectCIT = new ServiceUniversityObjectCITImpl();
-        serviceClSubjectCIT.setSessionFactory(sessionFactoryCIT);
-        List<ClSubjectCIT> subjNames = serviceClSubjectCIT.getOrderedSubject();
-
-        setDataToList(subjNames, jListOTHER, jScrollPaneOTHER);
-    }
+//    private void loadDataToOtherList() {
+//        ServiceUniversityObjectCITImpl serviceObjectCIT = new ServiceUniversityObjectCITImpl();
+//        serviceObjectCIT.setSessionFactory(sessionFactoryCIT);
+//        List<ClSubjectCIT> subjNames = serviceObjectCIT.getOrderedSubject();
+//
+//        setDataToList(subjNames, jListOTHER, jScrollPaneOTHER);
+//    }
 
     public void setLabelTitle(String name) {
         jLabelObjectName.setText(name);
@@ -177,9 +177,9 @@ public class InitializeSubjectsFrame2 extends JFrame {
 
     public void setUpButtonListeners(InitializeSubjectsFrame2 frame) {
         jButtonFillLists.addActionListener(e -> {
-            loadDataToFPMIList();
+            //loadDataToFPMIList();
             loadDataToCITList();
-            loadDataToOtherList();
+            //loadDataToOtherList();
             frame.revalidate();
             frame.repaint();
         });
