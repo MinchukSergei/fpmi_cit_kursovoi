@@ -9,4 +9,5 @@ import java.util.List;
  */
 public interface DAOCheckTable {
     List<CheckTable> getAll();
+    void retrySetMark(int checkTableId);
 }

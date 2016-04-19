@@ -6,6 +6,7 @@ import entities.mark_type.ClMarkTypeFPMI;
 import entities.students.ClStudentFPMI;
 import entities.subjects.ClSubjectFPMI;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -44,6 +45,22 @@ public class DAOCheckTableImpl implements DAOCheckTable {
         return check;
     }
 
+    @Override
+    public void retrySetMark(int checkTableId) {
+        Session session = null;
+        try {
+            session = sessionFactory.openSession();
+            Query query = session.getNamedQuery(CheckTable.RETRY_SET_MARK_PROC);
+            query.setParameter("check_table_id", checkTableId);
+            query.executeUpdate();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            if (session != null)
+                session.close();
+        }
+    }
+
     public ClSubjectFPMI getSubjectById(short subjId) {
         Session session = null;
         ClSubjectFPMI subject = null;
@@ -77,4 +94,6 @@ public class DAOCheckTableImpl implements DAOCheckTable {
         }
         return mark;
     }
+
+
 }

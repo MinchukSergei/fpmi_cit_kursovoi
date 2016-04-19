@@ -11,9 +11,15 @@ import java.io.Serializable;
 @NamedQueries({
         @NamedQuery(name = CheckTable.GET_ALL, query = CheckTable.GET_ALL_QUERY)
 })
+@NamedNativeQueries({
+        @NamedNativeQuery(name = CheckTable.RETRY_SET_MARK_PROC, query = CheckTable.RETRY_SET_MARK_PROC_QUERY)
+})
 public class CheckTable implements Serializable {
     public final static String GET_ALL = "CheckTable.getAll";
     static final String GET_ALL_QUERY = "SELECT c FROM CheckTable c";
+
+    public final static String RETRY_SET_MARK_PROC = "CheckTable.retrySetMark";
+    static final String RETRY_SET_MARK_PROC_QUERY = "{ CALL sp_retry_set_mark(:check_table_id) }";
 
     @Id
     @Column(name = "id", nullable = false)

@@ -7,9 +7,7 @@ import org.hibernate.SessionFactory;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,12 +19,16 @@ public class CheckTableFrame extends JFrame {
 
     private JButton jButtonRetry;
     private JButton jButtonShowAll;
+    private JButton jButtonSelectAll;
     private JScrollPane jScrollPaneCheckTable;
     private JTable jTableCheckTable;
+    private List<Integer> checkTableId;
 
     private DAOCheckTableImpl daoCheckTable;
     protected SessionFactory sessionFactoryFPMI;
     protected SessionFactory sessionFactoryCIT;
+
+    private boolean isSelectedAll;
 
     public CheckTableFrame(String title) throws HeadlessException {
         super(title);
@@ -41,7 +43,10 @@ public class CheckTableFrame extends JFrame {
         jTableCheckTable = new JTable();
         jButtonRetry = new JButton("Retry");
         jButtonShowAll = new JButton("Show all");
+        jButtonSelectAll = new JButton("Select all");
         daoCheckTable = new DAOCheckTableImpl();
+        checkTableId = new ArrayList<>();
+        isSelectedAll = false;
     }
 
     private void setUpDefault() {
@@ -55,6 +60,30 @@ public class CheckTableFrame extends JFrame {
             fillTable();
             frame.repaint();
         });
+
+        this.jButtonSelectAll.addActionListener(e -> {
+            DefaultTableModel model = (DefaultTableModel) jTableCheckTable.getModel();
+            if (isSelectedAll)
+                isSelectedAll = false;
+            else
+                isSelectedAll = true;
+            for (int i = 0; i < model.getRowCount(); i++) {
+                model.setValueAt(isSelectedAll, i, 0);
+            }
+        });
+
+        this.jButtonRetry.addActionListener(e -> {
+            DefaultTableModel model = (DefaultTableModel) jTableCheckTable.getModel();
+            if (model != null) {
+                for (int i = 0; i < model.getRowCount(); i++) {
+                    if ((Boolean) model.getValueAt(i, 0))
+                        daoCheckTable.retrySetMark(checkTableId.get(i));
+                }
+                fillTable();
+                frame.repaint();
+            }
+            //checkTableId.forEach(System.out::println);
+        });
     }
 
     private void fillTable() {
@@ -64,8 +93,10 @@ public class CheckTableFrame extends JFrame {
         Object[][] data = new Object[checkTable.size()][titleNames.length];
 
         int i = 0;
+        checkTableId.clear();
         for (CheckTable t : checkTable) {
             data[i] = setTableRow(t, titleNames.length);
+            checkTableId.add(t.getId());
             i++;
         }
         DefaultTableModel model = new DefaultTableModel(data, titleNames);
@@ -109,18 +140,6 @@ public class CheckTableFrame extends JFrame {
     }
 
     private void setUpPane() {
-        jTableCheckTable.setModel(new DefaultTableModel(
-                new Object [][] {
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null},
-                        {null, null, null, null}
-                },
-                new String [] {
-                        "Title 1", "Title 2", "Title 3", "Title 4"
-                }
-        ));
-
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -132,6 +151,8 @@ public class CheckTableFrame extends JFrame {
                                         .addComponent(jScrollPaneCheckTable, GroupLayout.DEFAULT_SIZE, 698, Short.MAX_VALUE)
                                         .addGroup(layout.createSequentialGroup()
                                                 .addGap(0, 0, Short.MAX_VALUE)
+                                                .addComponent(jButtonSelectAll)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jButtonShowAll)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(jButtonRetry)))
@@ -144,7 +165,8 @@ public class CheckTableFrame extends JFrame {
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(jButtonRetry)
-                                        .addComponent(jButtonShowAll))
+                                        .addComponent(jButtonShowAll)
+                                        .addComponent(jButtonSelectAll))
                                 .addContainerGap())
         );
 
