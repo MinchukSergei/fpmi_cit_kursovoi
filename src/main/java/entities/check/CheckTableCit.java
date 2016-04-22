@@ -1,8 +1,5 @@
 package entities.check;
 
-import dao.DAOCheckTable;
-import dao.impl.DAOCheckTableImpl;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -10,19 +7,25 @@ import java.io.Serializable;
  * Created by USER on 17.04.2016.
  */
 @Entity
-@Table(name = "check_table")
-@NamedQueries({
-        @NamedQuery(name = CheckTable.GET_ALL, query = CheckTable.GET_ALL_QUERY)
-})
-@NamedNativeQueries({
-        @NamedNativeQuery(name = CheckTable.RETRY_SET_MARK_PROC, query = CheckTable.RETRY_SET_MARK_PROC_QUERY)
-})
-public class CheckTable implements Serializable {
-    public final static String GET_ALL = "CheckTable.getAll";
-    static final String GET_ALL_QUERY = "SELECT c FROM CheckTable c";
+@Table(name = "check_table_cit")
 
-    public final static String RETRY_SET_MARK_PROC = "CheckTable.retrySetMark";
-    static final String RETRY_SET_MARK_PROC_QUERY = "{ CALL sp_retry_set_mark(:check_table_id) }";
+@NamedNativeQueries({
+        @NamedNativeQuery(name = CheckTableCit.RETRY_GET_ALL_PROC, query = CheckTableCit.RETRY_GET_ALL_PROC_QUERY,
+        resultClass = CheckTableCit.class)
+})
+public class CheckTableCit implements Serializable {
+    public CheckTableCit() {
+        this.id = -1;
+        this.nz = "";
+        this.course = -1;
+        this.famrus = "";
+        this.imrus = "";
+        this.mark = -1;
+        this.subject = -1;
+    }
+
+    public final static String RETRY_GET_ALL_PROC = "CheckTableCit.getAll";
+    static final String RETRY_GET_ALL_PROC_QUERY = "{ CALL sp_export_check_table }";
 
     @Id
     @Column(name = "id", nullable = false)
@@ -46,8 +49,6 @@ public class CheckTable implements Serializable {
     @Column(name = "mark", nullable = false)
     private short mark;
 
-    @Column(name = "message", nullable = false, columnDefinition = "char")
-    private String message;
 
     public int getId() {
         return id;
@@ -105,20 +106,13 @@ public class CheckTable implements Serializable {
         this.mark = mark;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        CheckTable that = (CheckTable) o;
+        CheckTableCit that = (CheckTableCit) o;
 
         if (id != that.id) return false;
         if (course != that.course) return false;
@@ -126,8 +120,7 @@ public class CheckTable implements Serializable {
         if (mark != that.mark) return false;
         if (nz != null ? !nz.equals(that.nz) : that.nz != null) return false;
         if (famrus != null ? !famrus.equals(that.famrus) : that.famrus != null) return false;
-        if (imrus != null ? !imrus.equals(that.imrus) : that.imrus != null) return false;
-        return message != null ? message.equals(that.message) : that.message == null;
+        return imrus != null ? imrus.equals(that.imrus) : that.imrus == null;
 
     }
 
@@ -140,7 +133,6 @@ public class CheckTable implements Serializable {
         result = 31 * result + (int) course;
         result = 31 * result + (int) subject;
         result = 31 * result + (int) mark;
-        result = 31 * result + (message != null ? message.hashCode() : 0);
         return result;
     }
 
@@ -149,7 +141,7 @@ public class CheckTable implements Serializable {
         return nz.trim() + ' ' +
                 famrus.trim() + ' ' +
                 imrus.trim() + ' ' +
-                course + ' ' +
+                course +
                 subject + ' ' +
                 mark;
     }

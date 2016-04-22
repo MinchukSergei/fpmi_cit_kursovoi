@@ -20,6 +20,8 @@ public class CheckTableFrame extends JFrame {
     private JButton jButtonRetry;
     private JButton jButtonShowAll;
     private JButton jButtonSelectAll;
+    private JButton jButtonDeleteSelected;
+
     private JScrollPane jScrollPaneCheckTable;
     private JTable jTableCheckTable;
     private List<Integer> checkTableId;
@@ -44,6 +46,7 @@ public class CheckTableFrame extends JFrame {
         jButtonRetry = new JButton("Retry");
         jButtonShowAll = new JButton("Show all");
         jButtonSelectAll = new JButton("Select all");
+        jButtonDeleteSelected = new JButton("Delete selected");
         daoCheckTable = new DAOCheckTableImpl();
         checkTableId = new ArrayList<>();
         isSelectedAll = false;
@@ -51,7 +54,7 @@ public class CheckTableFrame extends JFrame {
 
     private void setUpDefault() {
         this.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
-        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setVisible(true);
     }
 
@@ -83,6 +86,18 @@ public class CheckTableFrame extends JFrame {
                 frame.repaint();
             }
             //checkTableId.forEach(System.out::println);
+        });
+
+        this.jButtonDeleteSelected.addActionListener(e -> {
+            DefaultTableModel model = (DefaultTableModel) jTableCheckTable.getModel();
+            if (model != null) {
+                for (int i = 0; i < model.getRowCount(); i++) {
+                    if ((Boolean) model.getValueAt(i, 0))
+                        daoCheckTable.deleteCheckById(checkTableId.get(i));
+                }
+                fillTable();
+                frame.repaint();
+            }
         });
     }
 
@@ -151,6 +166,8 @@ public class CheckTableFrame extends JFrame {
                                         .addComponent(jScrollPaneCheckTable, GroupLayout.DEFAULT_SIZE, 698, Short.MAX_VALUE)
                                         .addGroup(layout.createSequentialGroup()
                                                 .addGap(0, 0, Short.MAX_VALUE)
+                                                .addComponent(jButtonDeleteSelected)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(jButtonSelectAll)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jButtonShowAll)
@@ -166,7 +183,8 @@ public class CheckTableFrame extends JFrame {
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(jButtonRetry)
                                         .addComponent(jButtonShowAll)
-                                        .addComponent(jButtonSelectAll))
+                                        .addComponent(jButtonSelectAll)
+                                        .addComponent(jButtonDeleteSelected))
                                 .addContainerGap())
         );
 

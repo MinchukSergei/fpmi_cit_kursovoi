@@ -61,4 +61,20 @@ public class DAOExportUniversityObjectImpl<EXPORT> implements DAOExportUniversit
         }
         return subjectsIdList;
     }
+
+    public EXPORT getCITObjectByFPMI(Class<EXPORT> clazz, short fpmiId) {
+        Session session = null;
+        EXPORT exportObject;
+        try {
+            session = sessionFactory.openSession();
+            exportObject = session.get(clazz, new Short(fpmiId));
+        } catch (HibernateException e) {
+            throw new HibernateException(e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return exportObject;
+    }
 }

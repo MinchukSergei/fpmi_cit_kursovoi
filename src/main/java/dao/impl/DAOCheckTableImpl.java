@@ -61,6 +61,7 @@ public class DAOCheckTableImpl implements DAOCheckTable {
         }
     }
 
+    @Override
     public ClSubjectFPMI getSubjectById(short subjId) {
         Session session = null;
         ClSubjectFPMI subject = null;
@@ -78,6 +79,7 @@ public class DAOCheckTableImpl implements DAOCheckTable {
         return subject;
     }
 
+    @Override
     public ClMarkTypeFPMI getMarkById(short markId) {
         Session session = null;
         ClMarkTypeFPMI mark = null;
@@ -95,5 +97,20 @@ public class DAOCheckTableImpl implements DAOCheckTable {
         return mark;
     }
 
-
+    public void deleteCheckById(int checkId) {
+        Session session = null;
+        CheckTable check = null;
+        try {
+            session = sessionFactory.openSession();
+            check = session.get(CheckTable.class, checkId);
+            session.delete(check);
+            session.flush();
+        } catch (HibernateException e) {
+            throw new HibernateException(e);
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
 }

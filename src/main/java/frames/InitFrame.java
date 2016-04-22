@@ -40,9 +40,6 @@ public class InitFrame extends JFrame {
     protected ServiceUniversityObjectCITImpl serviceObjectCIT;
     protected ServiceUniversityObjectFPMIImpl serviceObjectFPMI = new ServiceUniversityObjectFPMIImpl();
 
-
-
-
     public InitFrame(String title) {
         super(title);
         initComponents();
@@ -51,7 +48,7 @@ public class InitFrame extends JFrame {
         this.pack();
     }
 
-    private void initComponents() {
+    protected void initComponents() {
         jLabelObjectName = new JLabel();
 
         scrollPaneCIT = new JScrollPaneListCIT("CIT");

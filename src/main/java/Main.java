@@ -22,9 +22,13 @@ public class Main {
 //                InitializeMarkTypeFrame frame4 = new InitializeMarkTypeFrame("Mark type");
 //                frame4.setSessionFactoryFPMI(sqlServerConnectorFMPI.getSessionFactory());
 //                frame4.setSessionFactoryCIT(sqlServerConnectorCIT.getSessionFactory());
-                CheckTableFrame frame = new CheckTableFrame("Check");
+//                CheckTableFrame frame = new CheckTableFrame("Check");
+//                frame.setSessionFactoryFPMI(sqlServerConnectorFMPI.getSessionFactory());
+//                frame.setSessionFactoryCIT(sqlServerConnectorCIT.getSessionFactory());
+                CompareFrame frame = new CompareFrame("Compare table");
                 frame.setSessionFactoryFPMI(sqlServerConnectorFMPI.getSessionFactory());
                 frame.setSessionFactoryCIT(sqlServerConnectorCIT.getSessionFactory());
+
             }
         });
     }
