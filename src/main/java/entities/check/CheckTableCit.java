@@ -2,6 +2,7 @@ package entities.check;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by USER on 17.04.2016.
@@ -48,6 +49,15 @@ public class CheckTableCit implements Serializable {
 
     @Column(name = "mark", nullable = false)
     private short mark;
+
+    @Column(name = "semestr", nullable = false)
+    private short semestr;
+
+    @Column(name = "date", nullable = false)
+    private Date date;
+
+    @Column(name = "vedomost", nullable = false, columnDefinition = "char")
+    private String vedomost;
 
 
     public int getId() {
@@ -106,6 +116,29 @@ public class CheckTableCit implements Serializable {
         this.mark = mark;
     }
 
+    public short getSemestr() {
+        return semestr;
+    }
+
+    public void setSemestr(short semestr) {
+        this.semestr = semestr;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getVedomost() {
+        return vedomost;
+    }
+
+    public void setVedomost(String vedomost) {
+        this.vedomost = vedomost;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -118,9 +151,12 @@ public class CheckTableCit implements Serializable {
         if (course != that.course) return false;
         if (subject != that.subject) return false;
         if (mark != that.mark) return false;
+        if (semestr != that.semestr) return false;
         if (nz != null ? !nz.equals(that.nz) : that.nz != null) return false;
         if (famrus != null ? !famrus.equals(that.famrus) : that.famrus != null) return false;
-        return imrus != null ? imrus.equals(that.imrus) : that.imrus == null;
+        if (imrus != null ? !imrus.equals(that.imrus) : that.imrus != null) return false;
+        if (date != null ? !date.equals(that.date) : that.date != null) return false;
+        return vedomost != null ? vedomost.equals(that.vedomost) : that.vedomost == null;
 
     }
 
@@ -133,6 +169,9 @@ public class CheckTableCit implements Serializable {
         result = 31 * result + (int) course;
         result = 31 * result + (int) subject;
         result = 31 * result + (int) mark;
+        result = 31 * result + (int) semestr;
+        result = 31 * result + (date != null ? date.hashCode() : 0);
+        result = 31 * result + (vedomost != null ? vedomost.hashCode() : 0);
         return result;
     }
 

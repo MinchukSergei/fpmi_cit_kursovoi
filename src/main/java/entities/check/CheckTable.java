@@ -5,6 +5,7 @@ import dao.impl.DAOCheckTableImpl;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by USER on 17.04.2016.
@@ -45,6 +46,15 @@ public class CheckTable implements Serializable {
 
     @Column(name = "mark", nullable = false)
     private short mark;
+
+    @Column(name = "semestr", nullable = false)
+    private short semestr;
+
+    @Column(name = "date", nullable = false)
+    private Date date;
+
+    @Column(name = "vedomost", nullable = false, columnDefinition = "char")
+    private String vedomost;
 
     @Column(name = "message", nullable = false, columnDefinition = "char")
     private String message;
@@ -113,6 +123,30 @@ public class CheckTable implements Serializable {
         this.message = message;
     }
 
+    public short getSemestr() {
+        return semestr;
+    }
+
+    public void setSemestr(short semestr) {
+        this.semestr = semestr;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getVedomost() {
+        return vedomost;
+    }
+
+    public void setVedomost(String vedomost) {
+        this.vedomost = vedomost;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -124,9 +158,12 @@ public class CheckTable implements Serializable {
         if (course != that.course) return false;
         if (subject != that.subject) return false;
         if (mark != that.mark) return false;
+        if (semestr != that.semestr) return false;
         if (nz != null ? !nz.equals(that.nz) : that.nz != null) return false;
         if (famrus != null ? !famrus.equals(that.famrus) : that.famrus != null) return false;
         if (imrus != null ? !imrus.equals(that.imrus) : that.imrus != null) return false;
+        if (date != null ? !date.equals(that.date) : that.date != null) return false;
+        if (vedomost != null ? !vedomost.equals(that.vedomost) : that.vedomost != null) return false;
         return message != null ? message.equals(that.message) : that.message == null;
 
     }
@@ -140,6 +177,9 @@ public class CheckTable implements Serializable {
         result = 31 * result + (int) course;
         result = 31 * result + (int) subject;
         result = 31 * result + (int) mark;
+        result = 31 * result + (int) semestr;
+        result = 31 * result + (date != null ? date.hashCode() : 0);
+        result = 31 * result + (vedomost != null ? vedomost.hashCode() : 0);
         result = 31 * result + (message != null ? message.hashCode() : 0);
         return result;
     }

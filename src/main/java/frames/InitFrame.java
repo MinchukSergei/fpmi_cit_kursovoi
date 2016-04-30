@@ -23,7 +23,7 @@ public class InitFrame extends JFrame {
     private int FRAME_WIDTH = 700;
     private int FRAME_HEIGHT = 500;
 
-    private JLabel jLabelObjectName;
+    protected JLabel jLabelObjectName;
 
     protected JScrollPaneListCIT scrollPaneCIT;
     protected JScrollPaneListFPMI scrollPaneFPMI;
@@ -36,6 +36,8 @@ public class InitFrame extends JFrame {
     protected SessionFactory sessionFactoryFPMI;
     protected SessionFactory sessionFactoryCIT;
 
+    protected JPanel initPanel;
+
     protected ServiceExportUniversityObjectImpl serviceExportObject;
     protected ServiceUniversityObjectCITImpl serviceObjectCIT;
     protected ServiceUniversityObjectFPMIImpl serviceObjectFPMI = new ServiceUniversityObjectFPMIImpl();
@@ -46,6 +48,7 @@ public class InitFrame extends JFrame {
         setUpDefault();
         setUpPane(getCurrHeight(), getCurrWidth());
         this.pack();
+        this.setVisible(true);
     }
 
     protected void initComponents() {
@@ -62,6 +65,8 @@ public class InitFrame extends JFrame {
         serviceExportObject = new ServiceExportUniversityObjectImpl();
         serviceObjectCIT = new ServiceUniversityObjectCITImpl();
         serviceObjectFPMI = new ServiceUniversityObjectFPMIImpl();
+
+        initPanel = new JPanel();
     }
 
     public SessionFactory getSessionFactoryFPMI() {
@@ -91,7 +96,7 @@ public class InitFrame extends JFrame {
     private void setUpDefault() {
         this.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        this.setVisible(true);
+        this.setLayout(new BorderLayout());
     }
 
     @Override
@@ -100,18 +105,18 @@ public class InitFrame extends JFrame {
         setUpPane(getCurrWidth(), getCurrHeight());
     }
 
-    private int getCurrHeight() {
+    protected int getCurrHeight() {
         int minScrollHeight = 200;
         if (this.getContentPane().getSize().getHeight() < minScrollHeight)
             return minScrollHeight;
-        return (int) (this.getContentPane().getSize().getHeight() - minScrollHeight / 2);
+        return (int) (this.initPanel.getSize().getHeight() - minScrollHeight / 2);
     }
 
-    private int getCurrWidth() {
+    protected int getCurrWidth() {
         int minScrollWidth = 100;
         if (Math.round(this.getContentPane().getSize().getWidth() / 3) - 15 < minScrollWidth)
             return minScrollWidth;
-        return (int) (Math.round(this.getContentPane().getSize().getWidth() / 3.) - 15);
+        return (int) (Math.round(this.initPanel.getSize().getWidth() / 3.) - 15);
     }
 
     public <T> void setDataToList(java.util.List<T> names, JScrollPaneListDB paneListDB) {
@@ -275,9 +280,11 @@ public class InitFrame extends JFrame {
         setDataToList(otherList, scrollPaneOther);
     }
 
+
     private void setUpPane(int scrollPaneWidth, int scrollPaneHeight) {
-        GroupLayout layout = new GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+
+        GroupLayout layout = new GroupLayout(initPanel);
+        initPanel.setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
@@ -320,5 +327,6 @@ public class InitFrame extends JFrame {
                                         .addComponent(jButtonAccordance))
                                 .addContainerGap())
         );
+        this.add(initPanel, BorderLayout.CENTER);
     }
 }
